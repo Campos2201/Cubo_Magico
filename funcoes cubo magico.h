@@ -16,18 +16,19 @@ void interfaceGrafica(int matriz[2][12]);
 void rotacionarDireita(int matriz[2][12]);
 void rotacionarCima(int matriz[2][12]);
 void mudarFace(int matriz[][12], int nova[][12], int faceAtual, int faceNova);
-void girarMatriz(int matriz[][12], int faceAtual);
+void girarMatrizParaDir(int matriz[][12], int faceAtual);
+void girarMatrizParaEsq(int matriz[][12], int faceAtual);
 int face_montada(int matriz[][12], int face);
 int funcao_avaliadora(int matriz[][12]);
 
 
 void matrizResposta(int antiga[2][12])
 {
-    //int resposta[2][12] = {{1,2,5,6,9,10,13,14,17,18,21,22},
-     //                      {3,4,7,8,11,12,15,16,19,20,23,24}};
+    int resposta[2][12] = {{1,2,5,6,9,10,13,14,17,18,21,22},
+                           {3,4,7,8,11,12,15,16,19,20,23,24}};
 
-    int resposta[2][12] = {{1,1,2,2,3,3,4,4,5,5,6,6},
-                          {1,1,2,2,3,3,4,4,5,5,6,6}};
+    //int resposta[2][12] = {{1,1,2,2,3,3,4,4,5,5,6,6},
+    //                      {1,1,2,2,3,3,4,4,5,5,6,6}};
 
     copia(resposta, antiga);
 }
@@ -38,7 +39,7 @@ void imprime(int matriz[2][12])
     {
         for(int j = 0; j<12; j++)
         {
-            printf("%d ", matriz[i][j]);
+            printf("%02d ", matriz[i][j]);
         }
         printf("\n");
     }
@@ -229,8 +230,8 @@ void rotacionarDireita(int matriz[2][12])
     mudarFace(matriz,nova,6,-6);
     copia(nova, matriz);
 
-    girarMatriz(matriz, 8); // Cima
-    girarMatriz(matriz, 10); // Baixo
+    girarMatrizParaEsq(matriz, 8); // Face de cima
+    girarMatrizParaEsq(matriz, 10); // Face de baixo
 
 }
 
@@ -244,8 +245,8 @@ void rotacionarCima(int matriz[2][12])
     mudarFace(matriz,nova,8,-4);
     mudarFace(matriz,nova,10,-10);
     copia(nova, matriz);
-    girarMatriz(matriz, 2); // Direita
-    girarMatriz(matriz, 6); // Esquerda
+    girarMatrizParaDir(matriz, 2); // Face da direita
+    girarMatrizParaDir(matriz, 6); // Face da esquerda
 }
 
 void mudarFace(int matriz[][12], int nova[][12], int faceAtual, int faceNova)
@@ -259,7 +260,7 @@ void mudarFace(int matriz[][12], int nova[][12], int faceAtual, int faceNova)
     }
 }
 
-void girarMatriz(int matriz[][12], int faceAtual) // ver dps
+void girarMatrizParaDir(int matriz[][12], int faceAtual) // ver dps
 {
     int aux = matriz[0][faceAtual];
     matriz[0][faceAtual] = matriz[1][faceAtual];
@@ -268,6 +269,14 @@ void girarMatriz(int matriz[][12], int faceAtual) // ver dps
     matriz[0][faceAtual + 1] = aux;
 }
 
+void girarMatrizParaEsq(int matriz[][12], int faceAtual)
+{
+    int aux = matriz[0][faceAtual];
+    matriz[0][faceAtual] = matriz[0][faceAtual+1];
+    matriz[0][faceAtual+1] = matriz[1][faceAtual+1];
+    matriz[1][faceAtual+1] = matriz[1][faceAtual];
+    matriz[1][faceAtual] = aux;
+}
 int face_montada(int matriz[][12], int face)
 {
     if(matriz[0][face] != matriz[0][face])

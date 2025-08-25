@@ -21,7 +21,7 @@ int main() {
     interfaceGrafica(cubo_magico);
 
     printf("\n\nCubo depois de embaralhar\n");
-    //cuboInicial(cubo_magico);
+    cuboInicial(cubo_magico);
     interfaceGrafica(cubo_magico);
 
     printf("\n\npressione qualquer tecla...");
@@ -202,11 +202,11 @@ int opcoesJogador(int matriz[2][12])
         interfaceGrafica(matriz);
         printf("\n Matriz:\n");
         imprime(matriz);
-        printf("\n\n                  Selecione uma das acoes abaixo: (apenas 1,2,3,7,8 funcionam)\n"
+        printf("\n\n                  Selecione uma das acoes abaixo: (apenas 1,2,3,7,8 implementadas!!)\n"
                "                  1. Rodar lado direito para cima\n"
                "                  2. Rodar lado esquerdo para cima\n"
                "                  3. Rodar parte de cima para a direita\n"
-               "                  3. Rodar parte de baixo para a direita\n"
+               "                  4. Rodar parte de baixo para a direita\n"
                "                  5. Rodar parte da frente para a direita\n"
                "                  6. Rodar parte de tras para a direita\n"
                "                  7. Rotacionar cubo para cima\n"
