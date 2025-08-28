@@ -59,6 +59,65 @@ void roda_lado_direito_para_baixo(int matriz[2][12])
 
 }
 
+void roda_base_do_cubo_sentido_antihorario(int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[1][0];
+    aux2 = matriz[1][1];
+    matriz[1][0] = matriz[1][6];
+    matriz[1][1] = matriz[1][7];
+    aux3 = matriz[1][2];
+    aux4 = matriz[1][3];
+    matriz[1][2] = aux1;
+    matriz[1][3] = aux2;
+    aux1 = matriz[1][4];
+    aux2 = matriz[1][5];
+    matriz[1][4] = aux3;
+    matriz[1][5] = aux4;
+    matriz[1][6] = aux1;
+    matriz[1][7] = aux2;
+    aux1 = matriz[0][10];
+    aux2 = matriz[0][11];
+    aux3 = matriz[1][10];
+    aux4 = matriz[1][11];
+    matriz[0][10] = aux3;
+    matriz[0][11] = aux1;
+    matriz[1][10] = aux4;
+    matriz[1][11] = aux2;
+
+}
+
+void roda_face_da_frente_do_cubo_sentido_horario(int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[0][0];
+    aux2 = matriz[0][1];
+    aux3 = matriz[1][0];
+    aux4 = matriz[1][1];
+    matriz[0][0] = aux3;
+    matriz[0][1] = aux1;
+    matriz[1][0] = aux4;
+    matriz[1][1] = aux2;
+    aux1 = matriz[0][2];
+    aux2 = matriz[1][2];
+    matriz[0][2] = matriz[1][8];
+    matriz[1][2] = matriz[1][9];
+    aux3 = matriz[0][10];
+    aux4 = matriz[0][11];
+    matriz[0][10] = aux2;
+    matriz[0][11] = aux1;
+    aux1 = matriz[0][7];
+    aux2 = matriz[1][7];
+    matriz[0][7] = aux3;
+    matriz[1][7] = aux4;
+    matriz[1][8] = aux2;
+    matriz[1][9] = aux1;
+
+}
+
+
 int main() {
 
     int cubo_magico[2][12];
@@ -119,7 +178,10 @@ int main() {
     printf("\n");
 
 
-    roda_lado_direito_para_baixo(cubo_magico);
+
+
+// roda_lado_direito_para_baixo(cubo_magico);
+
 
 // imprimindo cubo magico
 
