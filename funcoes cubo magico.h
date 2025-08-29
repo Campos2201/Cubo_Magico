@@ -10,14 +10,16 @@ void copia(int orig[2][12], int dest[2][12]);
 void roda_lado_direito_para_cima(int matriz[2][12]);
 void roda_lado_direito_para_baixo(int matriz[2][12]);
 void esqCima(int antiga[2][12]);
-void cimaDir(int antiga[2][12]);
+void cimaAntiHorario(int antiga[2][12]);
 void esqCimaNovo(int m[2][12]);
 void interfaceGrafica(int matriz[2][12]);
-void rotacionarDireita(int matriz[2][12]);
+void rotacionarAntiHorario(int matriz[2][12]);
+void rotacionarHorario(int matriz[2][12]);
 void rotacionarCima(int matriz[2][12]);
+void rotacionarBaixo(int matriz[2][12]);
 void mudarFace(int matriz[][12], int nova[][12], int faceAtual, int faceNova);
-void girarMatrizParaDir(int matriz[][12], int faceAtual);
-void girarMatrizParaEsq(int matriz[][12], int faceAtual);
+void girarMatrizHorario(int matriz[][12], int faceAtual);
+void girarMatrizAntiHorario(int matriz[][12], int faceAtual);
 int face_montada(int matriz[][12], int face);
 int funcao_avaliadora(int matriz[][12]);
 
@@ -141,8 +143,32 @@ void esqCima(int antiga[2][12])
     copia(nova, antiga);
 }
 
- // jeito diferente de implementar, acho q vou tirar dps
-void cimaDir(int antiga[2][12])
+void esqBaixo(int antiga[2][12])
+{
+    int aux1, aux2, aux3, aux4;
+
+    aux1 = antiga[0][0];
+    aux2 = antiga[1][0];
+    antiga[0][0] = antiga[0][8];
+    antiga[1][0] = antiga[1][8];
+    aux3 = antiga[0][10];
+    aux4 = antiga[1][10];
+    antiga[0][10] = aux1;
+    antiga[1][10] = aux2;
+
+    aux1 = antiga[0][5];
+    aux2 = antiga[1][5];
+    antiga[0][5] = aux4;
+    antiga[1][5] = aux3;
+
+    antiga[0][8] = aux2;
+    antiga[1][8] = aux1;
+
+    girarMatrizHorario(antiga,6);
+
+}
+
+void cimaAntiHorario(int antiga[2][12])
 {
     int nova[2][12];
     copia(antiga, nova);
@@ -217,22 +243,38 @@ void interfaceGrafica(int matriz[2][12])
            matriz[1][1], matriz[1][2]);
 }
 
-void rotacionarDireita(int matriz[2][12])
+void rotacionarAntiHorario(int matriz[2][12])
 {
     int nova[2][12];
     copia(matriz, nova);
 
     for(int i=0; i<6; i=i+2)
     {
-        mudarFace(matriz,nova,i,2); // "shift-right"
+        mudarFace(matriz,nova,i,2); // "shift-left"
     }
 
     mudarFace(matriz,nova,6,-6);
     copia(nova, matriz);
 
-    girarMatrizParaEsq(matriz, 8); // Face de cima
-    girarMatrizParaEsq(matriz, 10); // Face de baixo
+    girarMatrizAntiHorario(matriz, 8); // Face de cima
+    girarMatrizHorario(matriz, 10); // Face de baixo
 
+}
+
+void rotacionarHorario(int matriz[2][12])
+{
+    int nova[2][12];
+    copia(matriz, nova);
+
+    mudarFace(matriz, nova, 2, -2);
+    mudarFace(matriz, nova, 4, -2);
+    mudarFace(matriz, nova, 6, -2);
+    mudarFace(matriz, nova, 0, 6);
+
+    girarMatrizHorario(nova, 8);
+    girarMatrizAntiHorario(nova, 10);
+
+    copia(nova, matriz);
 }
 
 void rotacionarCima(int matriz[2][12])
@@ -240,13 +282,47 @@ void rotacionarCima(int matriz[2][12])
     int nova[2][12];
     copia(matriz, nova);
 
-    mudarFace(matriz,nova,0,8);
-    mudarFace(matriz,nova,4,6);
-    mudarFace(matriz,nova,8,-4);
-    mudarFace(matriz,nova,10,-10);
+    mudarFace(matriz, nova, 10, -10);
+
+    girarMatrizHorario(nova, 2);
+
+    girarMatrizAntiHorario(matriz, 8);
+    girarMatrizAntiHorario(matriz, 8);
+    mudarFace(matriz, nova, 8, -4);
+
+    girarMatrizAntiHorario(nova, 6);
+
+    mudarFace(matriz, nova, 0, 8);
+
+    girarMatrizHorario(matriz, 4);
+    girarMatrizHorario(matriz, 4);
+    mudarFace(matriz, nova, 4, 6);
+
     copia(nova, matriz);
-    girarMatrizParaDir(matriz, 2); // Face da direita
-    girarMatrizParaDir(matriz, 6); // Face da esquerda
+}
+
+void rotacionarBaixo(int matriz[2][12])
+{
+    int nova[2][12];
+    copia(matriz, nova);
+
+    mudarFace(matriz, nova,8, -8);
+
+    girarMatrizAntiHorario(nova, 2);
+
+    girarMatrizAntiHorario(matriz, 10);
+    girarMatrizAntiHorario(matriz, 10);
+    mudarFace(matriz, nova, 10, -6);
+
+    girarMatrizHorario(nova, 6);
+
+    girarMatrizHorario(matriz, 4);
+    girarMatrizHorario(matriz, 4);
+    mudarFace(matriz, nova, 4, 4);
+
+    mudarFace(matriz, nova, 0, 10);
+
+    copia(nova, matriz);
 }
 
 void mudarFace(int matriz[][12], int nova[][12], int faceAtual, int faceNova)
@@ -260,7 +336,16 @@ void mudarFace(int matriz[][12], int nova[][12], int faceAtual, int faceNova)
     }
 }
 
-void girarMatrizParaDir(int matriz[][12], int faceAtual) // ver dps
+void girarMatrizAntiHorario(int matriz[][12], int faceAtual)
+{
+    int aux = matriz[0][faceAtual];
+    matriz[0][faceAtual] = matriz[0][faceAtual+1];
+    matriz[0][faceAtual+1] = matriz[1][faceAtual+1];
+    matriz[1][faceAtual+1] = matriz[1][faceAtual];
+    matriz[1][faceAtual] = aux;
+}
+
+void girarMatrizHorario(int matriz[][12], int faceAtual) // ver dps
 {
     int aux = matriz[0][faceAtual];
     matriz[0][faceAtual] = matriz[1][faceAtual];
@@ -269,14 +354,6 @@ void girarMatrizParaDir(int matriz[][12], int faceAtual) // ver dps
     matriz[0][faceAtual + 1] = aux;
 }
 
-void girarMatrizParaEsq(int matriz[][12], int faceAtual)
-{
-    int aux = matriz[0][faceAtual];
-    matriz[0][faceAtual] = matriz[0][faceAtual+1];
-    matriz[0][faceAtual+1] = matriz[1][faceAtual+1];
-    matriz[1][faceAtual+1] = matriz[1][faceAtual];
-    matriz[1][faceAtual] = aux;
-}
 int face_montada(int matriz[][12], int face)
 {
     if(matriz[0][face] != matriz[0][face])
@@ -291,7 +368,7 @@ int face_montada(int matriz[][12], int face)
 
 int funcao_avaliadora(int matriz[][12])
 {
-    for(int i=0; i<12; i+=4)
+    for(int i=0; i<8; i+=4)
     {
         // ja retorna caso ache uma face que nao esteja montada
         if(!face_montada(matriz,i))

@@ -20,9 +20,9 @@ int main() {
     printf("\n\nCubo antes de embaralhar:\n");
     interfaceGrafica(cubo_magico);
 
-    printf("\n\nCubo depois de embaralhar\n");
-    cuboInicial(cubo_magico);
-    interfaceGrafica(cubo_magico);
+    //printf("\n\nCubo depois de embaralhar\n");
+    //cuboInicial(cubo_magico);
+    //interfaceGrafica(cubo_magico);
 
     printf("\n\npressione qualquer tecla...");
     getch();
@@ -109,32 +109,34 @@ void realiza_mov(int mov, int matriz[][12])
 
         case 2:
         {
-            esqCimaNovo(matriz);
+            roda_lado_direito_para_baixo(matriz);
             break;
         }
 
         case 3:
         {
-            cimaDir(matriz);
+            esqCimaNovo(matriz);
             break;
         }
 
         case 4:
         {
+            esqBaixo(matriz);
             break;
         }
 
         case 5:
         {
+            cimaAntiHorario(matriz);
             break;
         }
 
         case 6:
         {
+
             break;
         }
 
-        // esses seriam só para o modo do jogador
         case 7:
         {
             rotacionarCima(matriz);
@@ -144,18 +146,63 @@ void realiza_mov(int mov, int matriz[][12])
         // esses seriam só para o modo do jogador
         case 8:
         {
-            rotacionarDireita(matriz);
+            rotacionarAntiHorario(matriz);
             break;
         }
 
-        case 0:
+        case 9:
+        {
+            break;
+        }
+
+        case 10:
         {
             break;
         }
 
         case 11:
         {
-            exit(0);
+            break;
+        }
+
+        case 12:
+        {
+            break;
+        }
+
+        // esses seriam só para o modo do jogador
+        case 13:
+        {
+            rotacionarCima(matriz);
+            break;
+        }
+
+        case 14:
+        {
+            rotacionarBaixo(matriz);
+            break;
+        }
+
+        case 15:
+        {
+            rotacionarAntiHorario(matriz);
+            break;
+        }
+
+        case 16:
+        {
+            rotacionarHorario(matriz);
+            break;
+        }
+
+        case 17:
+        {
+            break;
+        }
+
+        case 0:
+        {
+            exit(1);
         }
     }
 }
@@ -169,7 +216,7 @@ void menu(int matriz[][12])
 
     // por enquanto so temos a opcao 1
     do{
-        system("cls");
+        //system("cls");
         printf("\n\n                    CUBO INICIAL\n\n");
         interfaceGrafica(matriz);
         printf("\n\n"
@@ -202,21 +249,29 @@ int opcoesJogador(int matriz[2][12])
         interfaceGrafica(matriz);
         printf("\n Matriz:\n");
         imprime(matriz);
-        printf("\n\n                  Selecione uma das acoes abaixo: (apenas 1,2,3,7,8 implementadas!!)\n"
+        printf("\n\n                  Selecione uma das acoes abaixo: (apenas 3 a 5 e 13 a 16 implementadas!!)\n"
                "                  1. Rodar lado direito para cima\n"
-               "                  2. Rodar lado esquerdo para cima\n"
-               "                  3. Rodar parte de cima para a direita\n"
-               "                  4. Rodar parte de baixo para a direita\n"
-               "                  5. Rodar parte da frente para a direita\n"
-               "                  6. Rodar parte de tras para a direita\n"
-               "                  7. Rotacionar cubo para cima\n"
-               "                  8. Rotacionar cubo para a direita\n"
-               "                  9. Quero que a IA resolva para mim\n"
+               "                  2. Rodar lado direito para baixo\n"
+               "                  3. Rodar lado esquerdo para cima\n"
+               "                  4. Rodar lado esquerdo para baixo\n"
+               "                  5. Rodar parte de cima no sentido anti-horario\n"
+               "                  6. Rodar parte de cima no sentido horario\n"
+               "                  7. Rodar parte de baixo no sentido anti-horario\n"
+               "                  8. Rodar parte de baixo no sentido horario\n"
+               "                  9. Rodar parte da frente no sentido horario\n"
+               "                  10. Rodar parte da frente no sentido anti-horario\n"
+               "                  11. Rodar parte de tras no sentido horario\n"
+               "                  12. Rodar parte de tras no sentido anti-horario\n"
+               "                  13. Rotacionar cubo para cima\n"
+               "                  14. Rotacionar cubo para baixo\n"
+               "                  15. Rotacionar cubo no sentido anti-horario\n"
+               "                  16. Rotacionar cubo no sentido horario\n"
+               "                  17. Quero que a IA resolva para mim\n"
                "                  0. Sair\n"
                "                  ");
                scanf("%d", &opc);
 
-    }while(opc<0 || opc>9);
+    }while(opc<0 || opc>17);
 
     return opc;
 }
