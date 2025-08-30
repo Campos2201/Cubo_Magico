@@ -133,40 +133,44 @@ void realiza_mov(int mov, int matriz[][12])
 
         case 6:
         {
-
+            roda_topo_do_cubo_sentido_horario(matriz);
             break;
         }
 
         case 7:
         {
-            rotacionarCima(matriz);
+            roda_base_do_cubo_sentido_antihorario(matriz);
             break;
         }
 
         // esses seriam só para o modo do jogador
         case 8:
         {
-            rotacionarAntiHorario(matriz);
+            roda_base_do_cubo_sentido_horario(matriz);
             break;
         }
 
         case 9:
         {
+            roda_face_da_frente_do_cubo_sentido_horario(matriz);
             break;
         }
 
         case 10:
         {
+            roda_face_da_frente_do_cubo_sentido_antihorario(matriz);
             break;
         }
 
         case 11:
         {
+            roda_face_de_tras_do_cubo_sentido_horario(matriz);
             break;
         }
 
         case 12:
         {
+            roda_face_de_tras_do_cubo_sentido_antihorario(matriz);
             break;
         }
 
@@ -256,8 +260,8 @@ int opcoesJogador(int matriz[2][12])
                "                  4. Rodar lado esquerdo para baixo\n"
                "                  5. Rodar parte de cima no sentido anti-horario\n"
                "                  6. Rodar parte de cima no sentido horario\n"
-               "                  7. Rodar parte de baixo no sentido anti-horario\n"
-               "                  8. Rodar parte de baixo no sentido horario\n"
+               "                  7. Rodar base no sentido anti-horario\n"
+               "                  8. Rodar base no sentido horario\n"
                "                  9. Rodar parte da frente no sentido horario\n"
                "                  10. Rodar parte da frente no sentido anti-horario\n"
                "                  11. Rodar parte de tras no sentido horario\n"

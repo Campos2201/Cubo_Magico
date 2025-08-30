@@ -9,6 +9,13 @@ void imprime(int matriz[2][12]);
 void copia(int orig[2][12], int dest[2][12]);
 void roda_lado_direito_para_cima(int matriz[2][12]);
 void roda_lado_direito_para_baixo(int matriz[2][12]);
+void roda_base_do_cubo_sentido_horario(int matriz[2][12]);
+void roda_base_do_cubo_sentido_antihorario(int matriz[2][12]);
+void roda_face_da_frente_do_cubo_sentido_horario(int matriz[2][12]);
+void roda_face_da_frente_do_cubo_sentido_antihorario(int matriz[2][12]);
+void roda_face_de_tras_do_cubo_sentido_horario(int matriz[2][12]);
+void roda_face_de_tras_do_cubo_sentido_antihorario (int matriz[2][12]);
+void roda_topo_do_cubo_sentido_horario (int matriz[2][12]);
 void esqCima(int antiga[2][12]);
 void cimaAntiHorario(int antiga[2][12]);
 void esqCimaNovo(int m[2][12]);
@@ -114,6 +121,209 @@ void roda_lado_direito_para_baixo(int matriz[2][12])
     matriz[0][3] = aux2;
     matriz[1][2] = aux3;
     matriz[1][3] = aux4;
+
+}
+
+void roda_base_do_cubo_sentido_horario(int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[0][10];
+    aux2 = matriz[0][11];
+    aux3 = matriz[1][10];
+    aux4 = matriz[1][11];
+    matriz[0][10] = aux2;
+    matriz[0][11] = aux4;
+    matriz[1][10] = aux1;
+    matriz[1][11] = aux3;
+    aux1 = matriz[1][0];
+    aux2 = matriz[1][1];
+    matriz[1][0] = matriz[1][2];
+    matriz[1][1] = matriz[1][3];
+    aux3 = matriz[1][6];
+    aux4 = matriz[1][7];
+    matriz[1][6] = aux1;
+    matriz[1][7] = aux2;
+    aux1 = matriz[1][4];
+    aux2 = matriz[1][5];
+    matriz[1][4] = aux3;
+    matriz[1][5] = aux4;
+    matriz[1][2] = aux1;
+    matriz[1][3] = aux2;
+
+
+}
+
+void roda_base_do_cubo_sentido_antihorario(int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[1][0];
+    aux2 = matriz[1][1];
+    matriz[1][0] = matriz[1][6];
+    matriz[1][1] = matriz[1][7];
+    aux3 = matriz[1][2];
+    aux4 = matriz[1][3];
+    matriz[1][2] = aux1;
+    matriz[1][3] = aux2;
+    aux1 = matriz[1][4];
+    aux2 = matriz[1][5];
+    matriz[1][4] = aux3;
+    matriz[1][5] = aux4;
+    matriz[1][6] = aux1;
+    matriz[1][7] = aux2;
+    aux1 = matriz[0][10];
+    aux2 = matriz[0][11];
+    aux3 = matriz[1][10];
+    aux4 = matriz[1][11];
+    matriz[0][10] = aux3;
+    matriz[0][11] = aux1;
+    matriz[1][10] = aux4;
+    matriz[1][11] = aux2;
+
+}
+
+void roda_face_da_frente_do_cubo_sentido_horario(int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[0][0];
+    aux2 = matriz[0][1];
+    aux3 = matriz[1][0];
+    aux4 = matriz[1][1];
+    matriz[0][0] = aux3;
+    matriz[0][1] = aux1;
+    matriz[1][0] = aux4;
+    matriz[1][1] = aux2;
+    aux1 = matriz[0][2];
+    aux2 = matriz[1][2];
+    matriz[0][2] = matriz[1][8];
+    matriz[1][2] = matriz[1][9];
+    aux3 = matriz[0][10];
+    aux4 = matriz[0][11];
+    matriz[0][10] = aux2;
+    matriz[0][11] = aux1;
+    aux1 = matriz[0][7];
+    aux2 = matriz[1][7];
+    matriz[0][7] = aux3;
+    matriz[1][7] = aux4;
+    matriz[1][8] = aux2;
+    matriz[1][9] = aux1;
+
+}
+
+void roda_face_da_frente_do_cubo_sentido_antihorario(int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[0][0];
+    aux2 = matriz[0][1];
+    aux3 = matriz[1][0];
+    aux4 = matriz[1][1];
+    matriz[0][0] = aux2;
+    matriz[0][1] = aux4;
+    matriz[1][0] = aux1;
+    matriz[1][1] = aux3;
+    aux1 = matriz[0][2];
+    aux2 = matriz[1][2];
+    matriz[0][2] = matriz[0][11];
+    matriz[1][2] = matriz[0][10];
+    aux3 = matriz[1][8];
+    aux4 = matriz[1][9];
+    matriz[1][8] = aux1;
+    matriz[1][9] = aux2;
+    aux1 = matriz[0][7];
+    aux2 = matriz[1][7];
+    matriz[0][7] = aux4;
+    matriz[1][7] = aux3;
+    matriz[0][10] = aux1;
+    matriz[0][11] = aux2;
+
+}
+
+void roda_face_de_tras_do_cubo_sentido_horario(int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[0][4];
+    aux2 = matriz[0][5];
+    aux3 = matriz[1][4];
+    aux4 = matriz[1][5];
+    matriz[0][4] = aux2;
+    matriz[0][5] = aux4;
+    matriz[1][4] = aux1;
+    matriz[1][5] = aux3;
+    aux1 = matriz[0][3];
+    aux2 = matriz[1][3];
+    matriz[0][3] = matriz[0][8];
+    matriz[1][3] = matriz[0][9];
+    aux3 = matriz[1][10];
+    aux4 = matriz[1][11];
+    matriz[1][10] = aux2;
+    matriz[1][11] = aux1;
+    aux1 = matriz[0][6];
+    aux2 = matriz[1][6];
+    matriz[0][6] = aux3;
+    matriz[1][6] = aux4;
+    matriz[0][8] = aux2;
+    matriz[0][9] = aux1;
+
+}
+void roda_face_de_tras_do_cubo_sentido_antihorario (int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[0][4];
+    aux2 = matriz[0][5];
+    aux3 = matriz[1][4];
+    aux4 = matriz[1][5];
+    matriz[0][4] = aux3;
+    matriz[0][5] = aux1;
+    matriz[1][4] = aux4;
+    matriz[1][5] = aux2;
+    aux1 = matriz[1][10];
+    aux2 = matriz[1][11];
+    matriz[1][10] = matriz[0][6];
+    matriz[1][11] = matriz[1][6];
+    aux3 = matriz[0][3];
+    aux4 = matriz[1][3];
+    matriz[0][3] = aux2;
+    matriz[1][3] = aux1;
+    aux1 = matriz[0][8];
+    aux2 = matriz[0][9];
+    matriz[0][8] = aux3;
+    matriz[0][9] = aux4;
+    matriz[0][6] = aux2;
+    matriz[1][6] = aux1;
+
+}
+
+void roda_topo_do_cubo_sentido_horario (int matriz[2][12])
+{
+    int aux1,aux2,aux3,aux4;
+
+    aux1 = matriz[0][8];
+    aux2 = matriz[0][9];
+    aux3 = matriz[1][8];
+    aux4 = matriz[1][9];
+    matriz[0][8] = aux3;
+    matriz[0][9] = aux1;
+    matriz[1][8] = aux4;
+    matriz[1][9] = aux2;
+    aux1 = matriz[0][0];
+    aux2 = matriz[0][1];
+    matriz[0][0] = matriz[0][2];
+    matriz[0][1] = matriz[0][3];
+    aux3 = matriz[0][6];
+    aux4 = matriz[0][7];
+    matriz[0][6] = aux1;
+    matriz[0][7] = aux2;
+    aux1 = matriz[0][4];
+    aux2 = matriz[0][5];
+    matriz[0][4] = aux3;
+    matriz[0][5] = aux4;
+    matriz[0][2] = aux1;
+    matriz[0][3] = aux2;
 
 }
  // jeito diferente de implementar, acho q vou tirar dps
