@@ -33,11 +33,17 @@ int funcao_avaliadora(int matriz[][12]);
 
 void matrizResposta(int antiga[2][12])
 {
-    int resposta[2][12] = {{1,2,5,6,9,10,13,14,17,18,21,22},
-                           {3,4,7,8,11,12,15,16,19,20,23,24}};
+    //int resposta[2][12] = {{1,2,5,6,9,10,13,14,17,18,21,22},
+     //                      {3,4,7,8,11,12,15,16,19,20,23,24}};
 
-    //int resposta[2][12] = {{1,1,2,2,3,3,4,4,5,5,6,6},
-    //                      {1,1,2,2,3,3,4,4,5,5,6,6}};
+   int resposta[2][12] = {{1,1,2,2,3,3,4,4,5,5,6,6},
+                          {1,1,2,2,3,3,4,4,5,5,6,6}};
+
+    //int resposta[2][12] = {{5,6,2,2,5,6,4,4,3,1,1,3},
+    //                       {5,6,2,2,5,6,4,4,3,1,1,3}};
+
+    //int resposta[2][12] = {{5,3,2,2,1,6,4,4,3,6,1,5},
+    //                       {5,3,2,2,1,6,4,4,3,6,1,5}};
 
     copia(resposta, antiga);
 }
@@ -566,11 +572,11 @@ void girarMatrizHorario(int matriz[][12], int faceAtual) // ver dps
 
 int face_montada(int matriz[][12], int face)
 {
-    if(matriz[0][face] != matriz[0][face])
+    if(matriz[0][face] != matriz[0][face+1])
         return 0;
-    if(matriz[0][face] != matriz[1][face])
+    if(matriz[0][face+1] != matriz[1][face+1])
         return 0;
-    if(matriz[0][face] != matriz[1][face+1])
+    if(matriz[1][face+1] != matriz[1][face])
         return 0;
 
     return 1;
@@ -578,7 +584,7 @@ int face_montada(int matriz[][12], int face)
 
 int funcao_avaliadora(int matriz[][12])
 {
-    for(int i=0; i<8; i+=4)
+    for(int i=0; i<10; i+=2)
     {
         // ja retorna caso ache uma face que nao esteja montada
         if(!face_montada(matriz,i))
@@ -586,6 +592,120 @@ int funcao_avaliadora(int matriz[][12])
     }
 
     return 1; // cubo montado
+}
+
+void realiza_mov(int mov, int matriz[][12])
+{
+    switch(mov)
+    {
+        case 1:
+        {
+            roda_lado_direito_para_cima(matriz);
+            break;
+        }
+
+        case 2:
+        {
+            roda_lado_direito_para_baixo(matriz);
+            break;
+        }
+
+        case 3:
+        {
+            esqCimaNovo(matriz);
+            break;
+        }
+
+        case 4:
+        {
+            esqBaixo(matriz);
+            break;
+        }
+
+        case 5:
+        {
+            cimaAntiHorario(matriz);
+            break;
+        }
+
+        case 6:
+        {
+            roda_topo_do_cubo_sentido_horario(matriz);
+            break;
+        }
+
+        case 7:
+        {
+            roda_base_do_cubo_sentido_antihorario(matriz);
+            break;
+        }
+
+        // esses seriam só para o modo do jogador
+        case 8:
+        {
+            roda_base_do_cubo_sentido_horario(matriz);
+            break;
+        }
+
+        case 9:
+        {
+            roda_face_da_frente_do_cubo_sentido_horario(matriz);
+            break;
+        }
+
+        case 10:
+        {
+            roda_face_da_frente_do_cubo_sentido_antihorario(matriz);
+            break;
+        }
+
+        case 11:
+        {
+            roda_face_de_tras_do_cubo_sentido_horario(matriz);
+            break;
+        }
+
+        case 12:
+        {
+            roda_face_de_tras_do_cubo_sentido_antihorario(matriz);
+            break;
+        }
+
+        // esses seriam só para o modo do jogador
+        case 13:
+        {
+            rotacionarCima(matriz);
+            break;
+        }
+
+        case 14:
+        {
+            rotacionarBaixo(matriz);
+            break;
+        }
+
+        case 15:
+        {
+            rotacionarAntiHorario(matriz);
+            break;
+        }
+
+        case 16:
+        {
+            rotacionarHorario(matriz);
+            break;
+        }
+
+        case 17:
+        {
+            break;
+        }
+
+        case 0:
+        {
+            break;
+        }
+    }
 }
 
 #endif // FUNCOES_CUBO_MAGICO_H_INCLUDED

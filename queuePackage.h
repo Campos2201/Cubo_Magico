@@ -1,11 +1,12 @@
 #ifndef QUEUEPACKAGE_H_INCLUDED
 #define QUEUEPACKAGE_H_INCLUDED
 #include <stdlib.h>
-
+#include "funcoes cubo magico.h"
+#define NUM 10000
 //Estrutura dos elementos da pilha
 typedef struct no
 {
-    int movimentos[50];
+    int movimentos[NUM];
     int ultimaPos;
     struct no *prox;  //aponta para o próx elemento
 } NO;
@@ -16,6 +17,8 @@ typedef struct Fila
     NO *FIM;
 } FILA;
 
+FILA* LimpaFila(FILA* f);
+
 FILA* CriaFila()
 {
     FILA *f;
@@ -25,38 +28,24 @@ FILA* CriaFila()
     return f;
 }
 
-void funcaoSucessora(FILA* f, int indice, int movimentoDoPai)
-{
-
-    for(int i = 1; i<13; i++)
-    {
-        if(movimentoDoPai%2 == 0)
-        {
-            // garantindo que nao eh o mov contrario
-            if(i != movimentoDoPai-1)
-            {
-                InsereFila(f, indice, i);
-            }
-        }
-
-        else
-        {
-            // garantindo que nao eh o mov contrario
-            if(i != movimentoDoPai + 1)
-            {
-                InsereFila(f, indice, i);
-            }
-        }
-    }
-
-}
-
-void InsereFila(FILA* f, int indice, int movimento)
+void InsereFila(FILA* f, int indice, int movimento, int vetorMovimentos[NUM])
 {
     NO* novo;
     novo = (NO*) malloc(sizeof(NO));
+
+    if(indice>0)
+    {
+        for(int i = 0; i<indice; i++)
+        {
+            novo->movimentos[i] = vetorMovimentos[i];
+        }
+    }
+
     novo->movimentos[indice] = movimento;
+
+    printf("Movimento colocado = %d\n", novo->movimentos[indice]);
     novo->ultimaPos = indice;
+    printf("indice = %d\n", novo->ultimaPos);
     novo->prox = NULL;
 
     if (!(f->INICIO == NULL))
@@ -67,15 +56,41 @@ void InsereFila(FILA* f, int indice, int movimento)
         f->INICIO = f->FIM;
 }
 
+void funcaoSucessora(FILA* f, int indice, int movimentoDoPai, int vetorMovimentos[NUM])
+{
+
+    for(int i = 1; i<13; i++)
+    {
+        if(movimentoDoPai%2 == 0)
+        {
+            // garantindo que nao eh o mov contrario
+            if(i != movimentoDoPai-1)
+            {
+                InsereFila(f, indice, i, vetorMovimentos);
+            }
+        }
+
+        else
+        {
+            // garantindo que nao eh o mov contrario
+            if(i != movimentoDoPai + 1)
+            {
+                InsereFila(f, indice, i, vetorMovimentos);
+            }
+        }
+    }
+
+}
 
 int visitaEstado(FILA* f, int cubo[][12])
 {
     // visitando o primeiro da fila
     int ultimaPos = f->INICIO->ultimaPos;
+
     int movimento = f->INICIO->movimentos[ultimaPos];
 
     // montando o cubo desse estado
-    realiza_mov(cubo, movimento);
+    realiza_mov(movimento, cubo);
 
     // checando se está montado
     if(funcao_avaliadora(cubo))
@@ -96,39 +111,66 @@ void arrumaCubo(int cubo[][12], NO* primeiroDaLista)
         movimentoAnterior = primeiroDaLista->movimentos[indice - 1];
 
         if(movimento%2 == 0)
-            realiza_mov(cubo, movimento - 1);
+            realiza_mov(movimento - 1, cubo);
 
         else
-            realiza_movimento(cubo, movimento + 1);
+            realiza_mov(movimento + 1, cubo);
 
         // vendo se preciso voltar mais uma vez
-        if(movimentoAnterior == primeiroDaLista->prox->movimentos[indice - 1])
+        if(movimentoAnterior != primeiroDaLista->prox->movimentos[indice - 1])
         {
-            if(movimento%2 == 0)
-                realiza_mov(cubo, movimentoAnterior - 1);
+            if(movimentoAnterior%2 == 0)
+                realiza_mov(movimentoAnterior - 1, cubo);
 
             else
-                realiza_movimento(cubo, movimentoAnterior + 1);
+                realiza_mov(movimentoAnterior + 1, cubo);
         }
     }
 }
 
 
-void CuboMontado(FILA *f, int vetorMovimentos[50], int ultimaPosicao)
+int encontraPosicao(NO* primeiroDaLista)
+{
+    int indice = primeiroDaLista->ultimaPos;
+    int movimentoAnterior;
+
+    if(primeiroDaLista->movimentos[indice] != 0)
+    {
+        movimentoAnterior = primeiroDaLista->movimentos[indice - 1];
+
+        // vendo se preciso voltar mais uma vez
+        if(movimentoAnterior == primeiroDaLista->prox->movimentos[indice - 1])
+        {
+            return indice;
+        }
+        return indice+1;
+    }
+
+    return 0;
+
+}
+
+int vetor(FILA *f, int vetorMovimentos[NUM], int ultimaPosicao)
 {
     NO* cubo = f->INICIO;
-    int *vetMovimentosCubo[50] = cubo->movimentos;
-    ultimaPosicao = f->INICIO->ultimaPos;
+    ultimaPosicao = cubo->ultimaPos;
 
     for(int i = 0; i<ultimaPosicao+1; i++)
     {
-        vetorMovimentos[i] = vetMovimentosCubo[i];
+        vetorMovimentos[i] = cubo->movimentos[i];
     }
 
-    LimpaFila(f);
+    return ultimaPosicao;
 }
 
-int RemoveFila(FILA* f)
+int CuboMontado(FILA *f, int vetorMovimentos[NUM])
+{
+    int ultimaPosicao = vetor(f, vetorMovimentos, ultimaPosicao);
+    f = LimpaFila(f);
+    return ultimaPosicao;
+}
+
+void RemoveFila(FILA* f)
 {
     int num;
     NO* aux = f -> INICIO;
@@ -139,17 +181,14 @@ int RemoveFila(FILA* f)
         exit(1);
     }
 
-    num = f -> INICIO -> valor;
     aux = aux -> prox;
-    free(f -> INICIO);
-    f -> INICIO = aux;
+    free(f->INICIO);
+    f->INICIO = aux;
 
     if (aux == NULL)
     {
-        f -> FIM = NULL;
+        f->FIM = NULL;
     }
-
-    return num;
 }
 
 void ImprimeFila(FILA* f)
@@ -165,7 +204,7 @@ void ImprimeFila(FILA* f)
 
         while (aux)
         {
-            printf("%d ", aux -> valor);
+            //printf("%d ", aux -> valor);
             aux = aux -> prox;
         }
     }
@@ -173,12 +212,12 @@ void ImprimeFila(FILA* f)
 
 FILA* LimpaFila(FILA* f)
 {
-    NO* recebida = f -> INICIO;
+    NO* recebida = f->INICIO;
     NO* aux = recebida;
 
     while (recebida)
     {
-        aux = aux -> prox;
+        aux = aux->prox;
         free(recebida);
         recebida = aux;
     }
