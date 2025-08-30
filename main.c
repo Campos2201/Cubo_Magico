@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+//#include <conio.h>
 #include <time.h>
 #include "funcoes cubo magico.h"
+#include "queuePackage.h"
 
-void menu(int matriz[][12]);
+int menu(int matriz[][12], FILA* f, int caminhoAteResposta[50])
 int opcoesJogador(int matriz[2][12]);
 int aleatorio(int n_min, int n_max);
 int cuboInicial(int matriz[][12]);
@@ -14,53 +15,64 @@ int main() {
     srand(time(NULL)); // Inicializa o gerador com o tempo atual
 
     int cubo_magico[2][12];
+    int opc, caminhoAteResposta[50];
 
     // iniciando como matriz resposta so para comparar:
     matrizResposta(cubo_magico);
     printf("\n\nCubo antes de embaralhar:\n");
     interfaceGrafica(cubo_magico);
 
-    //printf("\n\nCubo depois de embaralhar\n");
-    //cuboInicial(cubo_magico);
-    //interfaceGrafica(cubo_magico);
+    printf("\n\nCubo depois de embaralhar\n");
+    cuboInicial(cubo_magico);
+    interfaceGrafica(cubo_magico);
 
     printf("\n\npressione qualquer tecla...");
     getch();
     system("cls");
 
-    menu(cubo_magico);
+    int opc, ultimaPosicao = 0;
+
+
+    printf("\n\n                     BEM VINDO AO PROGRAMA (...)\n\n\n"
+           "                  Pressione qualquer tecla para iniciar...");
+    getch();
+
+    // por enquanto so temos a opcao 1
+    do{
+        //system("cls");
+        printf("\n\n                    CUBO INICIAL\n\n");
+        interfaceGrafica(matriz);
+        printf("\n\n"
+               "                  Selecione uma das opcoes: (so opcao 1 funciona)\n"
+               "                  1. Quero eu mesmo(a) montar o cubo\n"
+               "                  2. Quero que a IA resolva para mim\n"
+               "                  ");
+        scanf("%d", &opc);
+    }while(opc!=1 && opc!=2);
+
+    if(opc == 1)
+    {
+
+        do{
+            opc = opcoesJogador(matriz);
+            realiza_mov(opc, matriz);
+        }while(!funcao_avaliadora(matriz));
+    }
+    system("cls");
+
+    if(opc == 2)
+    {
+        loopIA(f, matriz);
+        CuboMontado(f, caminhoAteResposta, ultimaPosicao);
+        printf("Caminho até a resposta: ");
+        for(int i = 0; i<ultimaPosicao+1; i++)
+        {
+            printf("%d - ", caminhoAteResposta[i]);
+        }
+    }
     printf("\n\n         Voce venceu :) !\n");
     interfaceGrafica(cubo_magico);
 
-    /*int matriz_resposta[2][12];
-
-    // construindo a matriz resposta
-    matrizResposta(matriz_resposta);
-
-    // copiando a matriz resposta no cubo magico, para testes
-    copia(matriz_resposta, cubo_magico);
-
-
-    // imprimindo matriz resposta
-    printf("Matriz resposta: \n");
-    imprime(matriz_resposta);
-    printf("\n");
-
-    roda_lado_direito_para_baixo(cubo_magico);
-
-    // imprimindo cubo magico
-    printf("Cubo magico: \n");
-    imprime(cubo_magico);
-
-    roda_lado_direito_para_cima(cubo_magico);
-
-    // imprimindo cubo magico
-    printf("Cubo magico: \n");
-    imprime(cubo_magico);
-
-    printf("Interface grafica do cubo atual:\n");
-    interfaceGrafica(cubo_magico);
-    */
 
     return 0;
 }
@@ -211,36 +223,9 @@ void realiza_mov(int mov, int matriz[][12])
     }
 }
 
-void menu(int matriz[][12])
+int menu(int matriz[][12], FILA* f, int caminhoAteResposta[50])
 {
-    int opc, opc2;
-    printf("\n\n                     BEM VINDO AO PROGRAMA (...)\n\n\n"
-           "                  Pressione qualquer tecla para iniciar...");
-    getch();
 
-    // por enquanto so temos a opcao 1
-    do{
-        //system("cls");
-        printf("\n\n                    CUBO INICIAL\n\n");
-        interfaceGrafica(matriz);
-        printf("\n\n"
-               "                  Selecione uma das opcoes: (so opcao 1 funciona)\n"
-               "                  1. Quero eu mesmo(a) montar o cubo\n"
-               "                  2. Quero que a IA resolva para mim\n"
-               "                  ");
-        scanf("%d", &opc);
-    }while(opc!=1 && opc!=2);
-
-    if(opc == 1)
-    {
-
-        do{
-            opc = opcoesJogador(matriz);
-            realiza_mov(opc, matriz);
-        }while(!funcao_avaliadora(matriz));
-    }
-
-    system("cls");
 }
 
 int opcoesJogador(int matriz[2][12])
@@ -278,5 +263,26 @@ int opcoesJogador(int matriz[2][12])
     }while(opc<0 || opc>17);
 
     return opc;
+}
+
+void loopIA(FILA *f, int cubo[][12])
+{
+    int montado, mov;
+    int posicao = 0;
+
+    InsereFila(f, 0, 0);
+
+    do
+    {
+        mov = f->INICIO->movimentos[posicao];
+        montado = visitaEstado(f, cubo);
+        if(!montado)
+        {
+            ArrumaCubo(Cubo, f->INICIO);
+            RemoveFila(f);
+            funcaoSucessora(f, posicao+1, mov);
+            posicao++;
+        }
+    } while(!montado);
 }
 
