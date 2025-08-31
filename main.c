@@ -4,13 +4,14 @@
 #include <time.h>
 #include "funcoes cubo magico.h"
 #include "queuePackage.h"
+#include "filaVisitados.h"
 
 int menu(int matriz[][12], FILA* f, int caminhoAteResposta[NUM]);
 int opcoesJogador(int matriz[2][12]);
 int aleatorio(int n_min, int n_max);
 int cuboInicial(int matriz[][12]);
 void realiza_mov(int mov, int matriz[][12]);
-void loopIA(FILA *f, int cubo[][12]);
+void loopIA(FILA *f, VISITADOS *v, int cubo[][12]);
 
 int main() {
     srand(time(NULL)); // Inicializa o gerador com o tempo atual
@@ -20,6 +21,7 @@ int main() {
     int ultimaPosicao = 0;
 
     FILA* f = CriaFila();
+    VISITADOS* v = CriaVisitados();
 
     // iniciando como matriz resposta so para comparar:
     matrizResposta(cubo_magico);
@@ -59,14 +61,13 @@ int main() {
         do{
             opc = opcoesJogador(cubo_magico);
             realiza_mov(opc, cubo_magico);
-        }while(!funcao_avaliadora(cubo_magico));
+        }while(cubo_magico);
     }
     system("cls");
 
-    printf("AQUI");
     if(opc == 2)
     {
-        loopIA(f, cubo_magico);
+        loopIA(f, v, cubo_magico);
         ultimaPosicao = CuboMontado(f, caminhoAteResposta);
         printf("Caminho ate a resposta: ");
         for(int i = 0; i<ultimaPosicao+1; i++)
@@ -89,22 +90,31 @@ int aleatorio(int n_min, int n_max)
 // funcao que embaralha o cubo a partir da matriz resposta
 int cuboInicial(int matriz[][12])
 {
-    int anterior = 0, num;
-    int mov;
+//    int anterior = 0, num;
+//    int mov;
+//
+//    matrizResposta(matriz);
+//    num = aleatorio(6,8);
+//
+//    while(num > 0)
+//    {
+//        mov = aleatorio(1,12);   // dps adicionar todos os 6 movimentos (por enquanto so temos esses)
+//        if(mov != anterior)
+//        {
+//            realiza_mov(mov, matriz);
+//            anterior = num;
+//            num--;
+//        }
+//    }
 
     matrizResposta(matriz);
-    num = 2;
-
-    while(num > 0)
-    {
-        mov = aleatorio(1,12);   // dps adicionar todos os 6 movimentos (por enquanto so temos esses)
-        if(mov != anterior)
-        {
-            realiza_mov(mov, matriz);
-            anterior = num;
-            num--;
-        }
-    }
+    realiza_mov(1, matriz);
+    realiza_mov(8, matriz);
+    realiza_mov(11, matriz);
+    realiza_mov(5, matriz);
+    //realiza_mov(1, matriz);
+    //realiza_mov(3, matriz);
+    //realiza_mov(6, matriz);
 }
 
 int menu(int matriz[][12], FILA* f, int caminhoAteResposta[NUM])
@@ -139,48 +149,68 @@ int opcoesJogador(int matriz[2][12])
                "                  14. Rotacionar cubo para baixo\n"
                "                  15. Rotacionar cubo no sentido anti-horario\n"
                "                  16. Rotacionar cubo no sentido horario\n"
-               "                  17. Quero que a IA resolva para mim\n"
+               "                  17. Rotacionar frente no sentido anti-horario\n"
+               "                  18. Rotacionar frente no sentido horario\n"
+               "                  19. Quero que a IA resolva para mim\n"
                "                  0. Sair\n"
                "                  ");
                scanf("%d", &opc);
 
-    }while(opc<0 || opc>17);
+    }while(opc<0 || opc>19);
 
     return opc;
 }
 
-void loopIA(FILA *f, int cubo[][12])
+void loopIA(FILA *f, VISITADOS *v, int cubo[][12])
 {
     int montado, mov;
     int posicao = 0;
     int proxIndice = 0;
     int vetorMovimentos[NUM];
+    int cubo_visitado[2][12];
+    ESTADO *estado = InsereVisitados(v, cubo);
 
-    InsereFila(f, 0, 0, vetorMovimentos);
+    int cubo_inicial[2][12];
+    copia(cubo, cubo_inicial);
+
+    if(!estado)
+        printf("NULO VISITADOS\n");
+
+    InsereFila(f, 0, 0, vetorMovimentos, estado);
+    if(!f->INICIO)
+        printf("SEM INICIO\n");
+    int i = 0;
+
+
     do
     {
-        printf("posicao q tento acessar%d\n",proxIndice);
+            printf("\n\n\n\n ---------------- FILHO %d\n", f->INICIO->num);
+
+        printf("\n\nVisitando indice = %d\n",proxIndice);
         mov = f->INICIO->movimentos[proxIndice];
-        printf("mov %d\n", mov);
+        printf("\nMovimento: %d", mov);
+        printf("\nAntes de movimentar:\n");
+        imprime(cubo);
         montado = visitaEstado(f, cubo);
-        printf("montado %d\n", montado);
+        printf("Depois de movimentar:\n");
+        imprime(cubo);
+
         if(!montado)
         {
-            printf("caraiz\n");
-            arrumaCubo(cubo, f->INICIO);
-            posicao = f->INICIO->ultimaPos;
-            vetor(f, vetorMovimentos, posicao);
-            proxIndice = encontraPosicao(f->INICIO);
-            RemoveFila(f);
-            funcaoSucessora(f, posicao + 1, mov, vetorMovimentos);
-            printf("ultima posicao: %d\n", f->INICIO->ultimaPos);
-            printf("ultimo mov: %d\n", f->INICIO->movimentos[f->INICIO->ultimaPos]);
-        }
-
-        if(montado)
-        {
-            printf("\n");
+            printf("Depois de arrumar:\n");
+            if(posicao >0)
+            {
+                arrumaCubo(cubo_inicial, cubo, f->INICIO);
+            }
             imprime(cubo);
+            posicao = f->INICIO->ultimaPos;
+            vetor(f, vetorMovimentos);
+            proxIndice = encontraPosicao(f->INICIO);
+            copia(f->INICIO->estadoNo->matriz, cubo_visitado);
+            RemoveFila(f);
+            funcaoSucessora(f, posicao + 1, mov, vetorMovimentos, v, cubo_visitado);
+            printf("ultima posicao: %d\n", f->INICIO->ultimaPos);
+            //printf("ultimo mov: %d\n", f->INICIO->movimentos[f->INICIO->ultimaPos]);
         }
     } while(!montado);
 }

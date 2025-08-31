@@ -34,16 +34,16 @@ int funcao_avaliadora(int matriz[][12]);
 void matrizResposta(int antiga[2][12])
 {
     //int resposta[2][12] = {{1,2,5,6,9,10,13,14,17,18,21,22},
-     //                      {3,4,7,8,11,12,15,16,19,20,23,24}};
+    //                       {3,4,7,8,11,12,15,16,19,20,23,24}};
 
    int resposta[2][12] = {{1,1,2,2,3,3,4,4,5,5,6,6},
                           {1,1,2,2,3,3,4,4,5,5,6,6}};
 
     //int resposta[2][12] = {{5,6,2,2,5,6,4,4,3,1,1,3},
-    //                       {5,6,2,2,5,6,4,4,3,1,1,3}};
+    //                      {5,6,2,2,5,6,4,4,3,1,1,3}};
 
-    //int resposta[2][12] = {{5,3,2,2,1,6,4,4,3,6,1,5},
-    //                       {5,3,2,2,1,6,4,4,3,6,1,5}};
+//int resposta[2][12] = {{5,3,2,2,1,6,4,4,3,6,1,5},
+ //                          {5,3,2,2,1,6,4,4,3,6,1,5}};
 
     copia(resposta, antiga);
 }
@@ -541,6 +541,55 @@ void rotacionarBaixo(int matriz[2][12])
     copia(nova, matriz);
 }
 
+void rotacionarEixoY_SentidoHorario(int matriz[][12])
+{
+    int nova[2][12];
+    copia(matriz, nova);
+
+    girarMatrizHorario(nova, 0);
+
+    girarMatrizHorario(matriz, 8);
+    mudarFace(matriz, nova, 8, -6);
+
+    girarMatrizAntiHorario(nova, 4);
+
+    girarMatrizHorario(matriz, 10);
+    mudarFace(matriz, nova, 10, -4);
+
+    girarMatrizHorario(matriz, 6);
+    mudarFace(matriz, nova, 6, 2);
+
+    girarMatrizHorario(matriz, 2);
+    mudarFace(matriz, nova, 2, 8);
+
+    copia(nova, matriz);
+}
+
+void rotacionarEixoY_SentidoAntiHorario(int matriz[][12])
+{
+    int nova[2][12];
+    copia(matriz, nova);
+
+    girarMatrizAntiHorario(nova, 0);
+
+    girarMatrizAntiHorario(matriz, 10);
+    mudarFace(matriz, nova, 10, -8);
+
+    girarMatrizHorario(nova, 4);
+
+    girarMatrizAntiHorario(matriz, 8);
+    mudarFace(matriz, nova, 8, -2);
+
+    girarMatrizAntiHorario(matriz, 2);
+    mudarFace(matriz, nova, 2, 6);
+
+    girarMatrizAntiHorario(matriz, 6);
+    mudarFace(matriz, nova, 6, 4);
+
+    copia(nova, matriz);
+
+}
+
 void mudarFace(int matriz[][12], int nova[][12], int faceAtual, int faceNova)
 {
     for(int i=0; i<2; i++)
@@ -697,6 +746,18 @@ void realiza_mov(int mov, int matriz[][12])
         }
 
         case 17:
+        {
+            rotacionarEixoY_SentidoAntiHorario(matriz);
+            break;
+        }
+
+        case 18:
+        {
+            rotacionarEixoY_SentidoHorario(matriz);
+            break;
+        }
+
+        case 19:
         {
             break;
         }
